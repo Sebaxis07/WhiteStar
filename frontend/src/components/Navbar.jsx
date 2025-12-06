@@ -377,17 +377,38 @@ export default function Navbar() {
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <>
+          {/* Overlay con z-index más alto */}
           <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] md:hidden transition-opacity duration-300"
             onClick={() => setMobileMenuOpen(false)}
+            aria-hidden="true"
           />
 
-          <div className="fixed inset-y-0 right-0 w-72 bg-white dark:bg-slate-900 z-40 animate-slide-in-right md:hidden overflow-y-auto border-l border-slate-200 dark:border-slate-800">
-            <div className="p-4 space-y-3">
+          {/* Drawer con scroll suave y padding bottom */}
+          <div className="fixed inset-y-0 right-0 w-80 max-w-[85vw] bg-white dark:bg-slate-900 z-[70] md:hidden overflow-y-auto border-l border-slate-200 dark:border-slate-800 shadow-2xl transform transition-transform duration-300 ease-out">
+            {/* Header del menú móvil */}
+            <div className="sticky top-0 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-4 flex items-center justify-between z-10">
+              <div className="flex items-center gap-2">
+                <Zap className="w-5 h-5 text-brand-gold" fill="currentColor" />
+                <span className="text-lg font-black bg-gradient-to-r from-brand-gold to-yellow-500 bg-clip-text text-transparent">
+                  WhiteStar
+                </span>
+              </div>
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                aria-label="Cerrar menú"
+              >
+                <X className="w-6 h-6 text-slate-900 dark:text-white" />
+              </button>
+            </div>
+
+            {/* Contenido del menú con padding bottom para evitar que el último elemento quede oculto */}
+            <div className="p-4 space-y-2 pb-20">
               <Link
                 to="/"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium transition"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium transition-colors min-h-[48px]"
               >
                 <Home size={20} />
                 Inicio
@@ -395,7 +416,7 @@ export default function Navbar() {
               <Link
                 to="/catalog"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium transition"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium transition-colors min-h-[48px]"
               >
                 <Search size={20} />
                 Catálogo
@@ -403,90 +424,124 @@ export default function Navbar() {
 
               {user ? (
                 <>
-                  <hr className="border-slate-200 dark:border-slate-800 my-2" />
+                  <hr className="border-slate-200 dark:border-slate-800 my-3" />
+
+                  {/* Información del usuario */}
+                  <div className="px-4 py-3 bg-gradient-to-r from-brand-gold/10 to-yellow-500/10 rounded-xl border border-brand-gold/20 mb-3">
+                    <p className="font-bold text-slate-900 dark:text-white text-sm">
+                      {user.first_name} {user.last_name}
+                    </p>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 truncate">
+                      {user.email}
+                    </p>
+                    <span className="inline-block mt-2 px-2 py-1 bg-brand-gold text-slate-900 text-xs font-bold rounded">
+                      {user.role}
+                    </span>
+                  </div>
+
                   <Link
                     to="/profile"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium transition"
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium transition-colors min-h-[48px]"
                   >
                     <User size={20} />
                     Mis Pedidos
                   </Link>
+
+                  {user && (
+                    <Link
+                      to="/reservations"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium transition-colors min-h-[48px]"
+                    >
+                      <Settings size={20} />
+                      Reservas
+                    </Link>
+                  )}
+
+                  {/* Sección de Administración */}
+                  {['Admin', 'Gerente', 'Vendedor', 'Administrador de Stock', 'Atención al Cliente'].includes(user?.role) && (
+                    <>
+                      <hr className="border-slate-200 dark:border-slate-800 my-3" />
+                      <p className="px-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
+                        Administración
+                      </p>
+                    </>
+                  )}
+
                   {['Admin', 'Gerente', 'Vendedor'].includes(user?.role) && (
                     <Link
                       to="/admin-dashboard"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium transition"
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium transition-colors min-h-[48px]"
                     >
                       <Settings size={20} />
                       {user?.role === 'Vendedor' ? 'Productos' : 'Panel Admin'}
                     </Link>
                   )}
-                  {/* Vendedor - Solo Consulta */}
                   {user?.role === 'Vendedor' && (
                     <Link
                       to="/seller-stock"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium transition"
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium transition-colors min-h-[48px]"
                     >
                       <Settings size={20} />
                       Consulta de Stock
                     </Link>
                   )}
-                  {/* Admin, Gerente, Admin Stock - Gestión Completa */}
                   {['Admin', 'Gerente', 'Administrador de Stock'].includes(user?.role) && (
                     <Link
                       to="/stock-management"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium transition"
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium transition-colors min-h-[48px]"
                     >
                       <Settings size={20} />
                       Inventario
                     </Link>
                   )}
                   {['Admin', 'Gerente'].includes(user?.role) && (
-                    <Link
-                      to="/reports"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium transition"
-                    >
-                      <Settings size={20} />
-                      Reportes
-                    </Link>
-                  )}
-                  {['Admin', 'Gerente'].includes(user?.role) && (
-                    <Link
-                      to="/users"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium transition"
-                    >
-                      <User size={20} />
-                      Usuarios
-                    </Link>
+                    <>
+                      <Link
+                        to="/reports"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium transition-colors min-h-[48px]"
+                      >
+                        <Settings size={20} />
+                        Reportes
+                      </Link>
+                      <Link
+                        to="/users"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium transition-colors min-h-[48px]"
+                      >
+                        <User size={20} />
+                        Usuarios
+                      </Link>
+                      <Link
+                        to="/tasks"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium transition-colors min-h-[48px]"
+                      >
+                        <Settings size={20} />
+                        Tareas
+                      </Link>
+                    </>
                   )}
                   {['Admin', 'Gerente', 'Atención al Cliente'].includes(user?.role) && (
                     <Link
                       to="/customer-service/dashboard"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium transition"
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium transition-colors min-h-[48px]"
                     >
                       <User size={20} />
                       Atención Cliente
                     </Link>
                   )}
-                  {['Admin', 'Gerente'].includes(user?.role) && (
-                    <Link
-                      to="/tasks"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium transition"
-                    >
-                      <Settings size={20} />
-                      Tareas
-                    </Link>
-                  )}
+
+                  <hr className="border-slate-200 dark:border-slate-800 my-3" />
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 font-medium transition"
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 font-medium transition-colors min-h-[48px]"
                   >
                     <LogOut size={20} />
                     Cerrar Sesión
@@ -494,18 +549,18 @@ export default function Navbar() {
                 </>
               ) : (
                 <>
-                  <hr className="border-slate-200 dark:border-slate-800 my-2" />
+                  <hr className="border-slate-200 dark:border-slate-800 my-3" />
                   <Link
                     to="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full px-4 py-3 text-center text-slate-900 dark:text-white font-medium hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition"
+                    className="block w-full px-4 py-3 text-center text-slate-900 dark:text-white font-medium hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors min-h-[48px]"
                   >
                     Iniciar Sesión
                   </Link>
                   <Link
                     to="/register"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full px-4 py-3 text-center bg-gradient-to-r from-brand-gold to-yellow-500 text-slate-900 font-bold rounded-lg hover:shadow-lg transition"
+                    className="block w-full px-4 py-3 text-center bg-gradient-to-r from-brand-gold to-yellow-500 text-slate-900 font-bold rounded-xl hover:shadow-lg transition-all min-h-[48px]"
                   >
                     Registrarse
                   </Link>
