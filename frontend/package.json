@@ -1,6 +1,6 @@
 {
   "name": "whitestar-frontend",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "WhiteStar Frontend SPA - TRL-5 E-commerce",
   "type": "module",
   "scripts": {
