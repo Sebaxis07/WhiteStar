@@ -21,15 +21,16 @@
     default-src 'self';
     script-src 'self' 'unsafe-inline' 'unsafe-eval';
     style-src 'self' 'unsafe-inline' blob: https:;
-    img-src 'self' data: https: blob: https://whitestar-production.up.railway.app/api;
+    img-src 'self' data: https: blob: https://whitestar-production.up.railway.app;
     font-src 'self' data: https:;
-    connect-src 'self' https://whitestar-production.up.railway.app/api https://whitestar-production.up.railway.app/api ws://localhost:5173;
+    connect-src 'self' http://localhost:3001 ws://localhost:5173 https://whitestar-production.up.railway.app;
     base-uri 'self';
     form-action 'self';
   ">
 
 
-  <title>WhiteStar - E-commerce | Fragancias Premium</title>
+
+  <title>WhiteStar</title>
 </head>
 
 <body class="bg-slate-50">
