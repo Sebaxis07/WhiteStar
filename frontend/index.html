@@ -17,8 +17,17 @@
   <meta name="referrer" content="strict-origin-when-cross-origin">
 
   <!-- CSP Meta (CORREGIDO - sin frame-ancestors) -->
-  <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' blob: https:; img-src 'self' data: https: blob: http://localhost:3001; font-src 'self' data: https:; connect-src 'self' http://localhost:3001 ws://localhost:5173; base-uri 'self'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' 'unsafe-eval';
+    style-src 'self' 'unsafe-inline' blob: https:;
+    img-src 'self' data: https: blob: http://localhost:3001;
+    font-src 'self' data: https:;
+    connect-src 'self' https://whitestar-production.up.railway.app http://localhost:3001 ws://localhost:5173;
+    base-uri 'self';
+    form-action 'self';
+  ">
+
 
   <title>WhiteStar - E-commerce | Fragancias Premium</title>
 </head>
