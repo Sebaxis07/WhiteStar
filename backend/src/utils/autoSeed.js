@@ -11,30 +11,32 @@ const ROLES = {
 };
 
 /**
- * Auto-seed the database if it's empty (no roles exist)
+ * Auto-seed the database if it's empty (no products exist)
  * This runs automatically on server startup in production
  */
 export async function autoSeedDatabase() {
     try {
-        // Check if database is already seeded
-        const existingRoles = await Role.count();
-        if (existingRoles > 0) {
-            console.log('✓ Base de datos ya poblada, omitiendo seed automático');
+        // Check if database already has products
+        const existingProducts = await Product.count();
+        if (existingProducts > 0) {
+            console.log('✓ Base de datos ya tiene productos, omitiendo seed automático');
             return;
         }
 
-        console.log('🌱 Base de datos vacía detectada. Iniciando auto-seed...\n');
+        console.log('🌱 No hay productos en la base de datos. Iniciando auto-seed...\n');
 
-        // 1. Create Roles
+        // 1. Create Roles (use findOrCreate to avoid duplicates)
         console.log('📝 Creando roles...');
-        const roles = await Promise.all([
-            Role.create({ name: ROLES.ADMIN }),
-            Role.create({ name: ROLES.GERENTE }),
-            Role.create({ name: ROLES.VENDEDOR }),
-            Role.create({ name: ROLES.ADMIN_STOCK }),
-            Role.create({ name: ROLES.ATENCION_CLIENTE }),
-            Role.create({ name: ROLES.CLIENTE })
+        const roleResults = await Promise.all([
+            Role.findOrCreate({ where: { name: ROLES.ADMIN }, defaults: { name: ROLES.ADMIN } }),
+            Role.findOrCreate({ where: { name: ROLES.GERENTE }, defaults: { name: ROLES.GERENTE } }),
+            Role.findOrCreate({ where: { name: ROLES.VENDEDOR }, defaults: { name: ROLES.VENDEDOR } }),
+            Role.findOrCreate({ where: { name: ROLES.ADMIN_STOCK }, defaults: { name: ROLES.ADMIN_STOCK } }),
+            Role.findOrCreate({ where: { name: ROLES.ATENCION_CLIENTE }, defaults: { name: ROLES.ATENCION_CLIENTE } }),
+            Role.findOrCreate({ where: { name: ROLES.CLIENTE }, defaults: { name: ROLES.CLIENTE } })
         ]);
+
+        const roles = roleResults.map(result => result[0]); // findOrCreate returns [instance, created]
 
         const roleMap = {};
         roles.forEach((role) => {
