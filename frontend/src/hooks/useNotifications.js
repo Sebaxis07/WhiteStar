@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
 
 export const useNotifications = () => {
     const [notifications, setNotifications] = useState([]);
@@ -20,7 +20,7 @@ export const useNotifications = () => {
                 params: { unreadOnly, limit: 50 }
             });
 
-            setNotifications(response.data.notifications);
+            setNotifications(response.data.notifications || []);
             setError(null);
         } catch (err) {
             setError(err.response?.data?.message || 'Error al cargar notificaciones');

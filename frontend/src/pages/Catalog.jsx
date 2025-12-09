@@ -51,8 +51,8 @@ export default function Catalog() {
       });
 
       const response = await api.get(`/products?${params}`);
-      setProducts(response.data.products);
-      setPagination(response.data.pagination);
+      setProducts(response.data.products || []);
+      setPagination(response.data.pagination || {});
     } catch (err) {
       setError(err.response?.data?.message || 'Error al cargar productos');
       setProducts([]);
@@ -206,8 +206,8 @@ export default function Catalog() {
                   <button
                     onClick={() => setViewMode('grid')}
                     className={`p-2.5 rounded-lg transition ${viewMode === 'grid'
-                        ? 'bg-brand-gold text-slate-900 shadow-lg'
-                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                      ? 'bg-brand-gold text-slate-900 shadow-lg'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                       }`}
                     title="Vista Grid"
                   >
@@ -216,8 +216,8 @@ export default function Catalog() {
                   <button
                     onClick={() => setViewMode('list')}
                     className={`p-2.5 rounded-lg transition ${viewMode === 'list'
-                        ? 'bg-brand-gold text-slate-900 shadow-lg'
-                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                      ? 'bg-brand-gold text-slate-900 shadow-lg'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                       }`}
                     title="Vista Lista"
                   >
@@ -318,8 +318,8 @@ export default function Catalog() {
                                   key={pageNum}
                                   onClick={() => setPage(pageNum)}
                                   className={`w-12 h-12 rounded-xl font-black transition ${page === pageNum
-                                      ? 'bg-gradient-to-r from-brand-gold to-yellow-500 text-slate-900 shadow-lg'
-                                      : 'bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white hover:border-brand-gold'
+                                    ? 'bg-gradient-to-r from-brand-gold to-yellow-500 text-slate-900 shadow-lg'
+                                    : 'bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white hover:border-brand-gold'
                                     }`}
                                 >
                                   {pageNum}

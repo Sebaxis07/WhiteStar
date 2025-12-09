@@ -32,7 +32,7 @@ export default function UserManagement() {
         try {
             setLoading(true);
             const response = await api.get('/users');
-            setUsers(response.data.users);
+            setUsers(response.data.users || []);
         } catch (error) {
             console.error(error);
             addToast('Error al cargar usuarios', 'error');

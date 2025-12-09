@@ -29,8 +29,8 @@ export default function CustomerServiceDashboard() {
                 ]);
 
                 setStats({
-                    pendingComplaints: complaintsRes.data.pagination.total,
-                    myComplaints: myComplaintsRes.data.pagination.total,
+                    pendingComplaints: complaintsRes.data.pagination?.total || 0,
+                    myComplaints: myComplaintsRes.data.pagination?.total || 0,
                     pendingReservations: 5, // Placeholder
                     recentOrders: 12 // Placeholder
                 });

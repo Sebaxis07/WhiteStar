@@ -32,7 +32,7 @@ export default function OrderConfirmation() {
     const handleDownloadTicket = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/orders/${id}/ticket`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api'}/orders/${id}/ticket`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
