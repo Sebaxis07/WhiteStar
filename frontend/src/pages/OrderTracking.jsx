@@ -21,9 +21,9 @@ export default function OrderTracking() {
                 : '/customer-service/reservations/search';
 
             const response = await api.get(endpoint, { params: { query } });
-            setResults(response.data.data);
+            setResults(response.data.data || []);
 
-            if (response.data.data.length === 0) {
+            if (response.data.data?.length === 0) {
                 addToast(`No se encontraron ${activeTab === 'orders' ? 'órdenes' : 'reservas'}`, 'info');
             }
         } catch (error) {
@@ -98,8 +98,8 @@ export default function OrderTracking() {
                     <button
                         onClick={() => { setActiveTab('orders'); setResults([]); setSelectedItem(null); }}
                         className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition ${activeTab === 'orders'
-                                ? 'bg-brand-gold text-slate-900'
-                                : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'
+                            ? 'bg-brand-gold text-slate-900'
+                            : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'
                             }`}
                     >
                         <Package size={20} />
@@ -108,8 +108,8 @@ export default function OrderTracking() {
                     <button
                         onClick={() => { setActiveTab('reservations'); setResults([]); setSelectedItem(null); }}
                         className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition ${activeTab === 'reservations'
-                                ? 'bg-brand-gold text-slate-900'
-                                : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'
+                            ? 'bg-brand-gold text-slate-900'
+                            : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'
                             }`}
                     >
                         <Calendar size={20} />
@@ -163,8 +163,8 @@ export default function OrderTracking() {
                                                     #{item.id}
                                                 </span>
                                                 <span className={`text-xs px-2 py-0.5 rounded ${item.status === 'Entregado' || item.status === 'Confirmada' ? 'bg-green-100 text-green-700' :
-                                                        item.status === 'Cancelado' ? 'bg-red-100 text-red-700' :
-                                                            'bg-yellow-100 text-yellow-700'
+                                                    item.status === 'Cancelado' ? 'bg-red-100 text-red-700' :
+                                                        'bg-yellow-100 text-yellow-700'
                                                     }`}>
                                                     {item.status}
                                                 </span>
@@ -226,8 +226,8 @@ export default function OrderTracking() {
                                                     onClick={() => handleUpdateStatus(selectedItem.id, status)}
                                                     disabled={selectedItem.status === status}
                                                     className={`px-4 py-2 rounded-lg font-medium transition ${selectedItem.status === status
-                                                            ? 'bg-slate-200 dark:bg-slate-600 text-slate-500 cursor-not-allowed'
-                                                            : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 hover:border-brand-gold hover:text-brand-gold'
+                                                        ? 'bg-slate-200 dark:bg-slate-600 text-slate-500 cursor-not-allowed'
+                                                        : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 hover:border-brand-gold hover:text-brand-gold'
                                                         }`}
                                                 >
                                                     {status}

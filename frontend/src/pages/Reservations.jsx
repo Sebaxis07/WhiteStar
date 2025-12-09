@@ -27,7 +27,7 @@ export default function Reservations() {
             const endpoint = isStaff ? '/reservations' : '/reservations/my';
             const params = filter !== 'all' ? `?status=${filter}` : '';
             const response = await api.get(`${endpoint}${params}`);
-            setReservations(response.data.data);
+            setReservations(response.data.data || []);
         } catch (error) {
             addToast('Error al cargar reservas', 'error');
         } finally {

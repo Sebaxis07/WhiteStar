@@ -19,7 +19,7 @@ export default function CustomerLookup() {
         try {
             setLoading(true);
             const response = await api.get('/customer-service/customers/search');
-            setCustomers(response.data.data);
+            setCustomers(response.data.data || []);
         } catch (error) {
             console.error(error);
         } finally {
@@ -39,8 +39,8 @@ export default function CustomerLookup() {
             setSelectedCustomer(null);
             setProfileData(null);
             const response = await api.get('/customer-service/customers/search', { params: { query } });
-            setCustomers(response.data.data);
-            if (response.data.data.length === 0) {
+            setCustomers(response.data.data || []);
+            if (response.data.data?.length === 0) {
                 addToast('No se encontraron clientes', 'info');
             }
         } catch (error) {

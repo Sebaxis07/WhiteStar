@@ -35,18 +35,18 @@ export default function StockManagement() {
             setLoading(true);
             if (activeTab === 'alerts') {
                 const response = await api.get('/stock/alerts?is_active=true', { signal: controller.signal });
-                setAlerts(response.data.data);
+                setAlerts(response.data.data || []);
             } else if (activeTab === 'inventory') {
                 const response = await api.get('/stock/report', { signal: controller.signal });
-                setProducts(response.data.data.products);
+                setProducts(response.data.data?.products || []);
             } else if (activeTab === 'movements') {
                 const params = { ...movementFilters };
                 const [movementsRes, patternsRes] = await Promise.all([
                     api.get('/stock/movements', { params, signal: controller.signal }),
                     api.get('/stock/patterns', { params: { start_date: movementFilters.start_date, end_date: movementFilters.end_date }, signal: controller.signal })
                 ]);
-                setMovements(movementsRes.data.data);
-                setPatterns(patternsRes.data.data);
+                setMovements(movementsRes.data.data || []);
+                setPatterns(patternsRes.data.data || []);
             }
         } catch (error) {
             if (axios.isCancel(error)) return;

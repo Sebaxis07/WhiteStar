@@ -32,7 +32,7 @@ export default function ComplaintManagement() {
             }
 
             const response = await api.get('/complaints', { params });
-            setComplaints(response.data.data);
+            setComplaints(response.data.data || []);
         } catch (error) {
             console.error(error);
             addToast('Error al cargar reclamos', 'error');
