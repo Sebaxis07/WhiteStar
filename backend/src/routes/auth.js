@@ -28,7 +28,13 @@ router.post('/register', [
       return next(new CustomError('Email ya registrado', 400));
     }
 
-    const clientRole = await Role.findOne({ where: { name: 'Cliente' } });
+    let clientRole = await Role.findOne({ where: { name: 'Cliente' } });
+
+    // Si no existe el rol Cliente, crearlo automáticamente
+    if (!clientRole) {
+      clientRole = await Role.create({ name: 'Cliente', description: 'Cliente regular' });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 12);
 
     const user = await User.create({
