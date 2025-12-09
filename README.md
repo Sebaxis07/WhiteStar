@@ -154,7 +154,7 @@ El frontend por defecto corre en el puerto 5173 (Vite). Ambos puertos deben esta
 Desde la carpeta del backend, ejecuta:
 
 ```
-npm run dev
+npm start
 ```
 
 Deberias ver un mensaje indicando que el servidor esta corriendo en el puerto configurado.
