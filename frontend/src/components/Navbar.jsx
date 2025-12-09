@@ -20,6 +20,7 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState('');
   const [scrolled, setScrolled] = useState(false);
   const [favorites, setFavorites] = useState([]);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const cartCount = getItemCount();
 
@@ -37,10 +38,15 @@ export default function Navbar() {
   }, []);
 
   const handleLogout = () => {
+    setShowLogoutModal(true);
+    setUserDropdown(false);
+  };
+
+  const confirmLogout = () => {
     logout();
     navigate('/');
     setMobileMenuOpen(false);
-    setUserDropdown(false);
+    setShowLogoutModal(false);
   };
 
   const handleSearch = (e) => {
@@ -566,6 +572,45 @@ export default function Navbar() {
                   </Link>
                 </>
               )}
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Modal de Confirmación de Cierre de Sesión */}
+      {showLogoutModal && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]"
+            onClick={() => setShowLogoutModal(false)}
+          />
+          <div className="fixed inset-0 flex items-center justify-center z-[101] p-4">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-6 w-full max-w-sm animate-fade-in-down">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <LogOut className="w-8 h-8 text-red-600 dark:text-red-400" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
+                  ¿Cerrar sesión?
+                </h3>
+                <p className="text-slate-600 dark:text-slate-400">
+                  ¿Estás seguro que quieres cerrar tu sesión?
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowLogoutModal(false)}
+                  className="flex-1 px-4 py-3 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={confirmLogout}
+                  className="flex-1 px-4 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition"
+                >
+                  Sí, cerrar sesión
+                </button>
+              </div>
             </div>
           </div>
         </>

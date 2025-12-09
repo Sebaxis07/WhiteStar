@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
 import {
   Package, Calendar, DollarSign, User, Settings, Heart,
   TrendingUp, Award, ShoppingBag, Clock, CheckCircle, Truck, Box,
-  Home, Bell, MapPin, CreditCard, Shield, LogOut, ChevronRight, Sparkles
+  Home, Bell, MapPin, CreditCard, Shield, LogOut, ChevronRight, Sparkles, MessageSquare
 } from 'lucide-react';
 
 export default function Profile() {
@@ -18,6 +18,7 @@ export default function Profile() {
   const [error, setError] = useState(null);
   const [activeView, setActiveView] = useState('overview');
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -54,6 +55,7 @@ export default function Profile() {
   const menuItems = [
     { id: 'overview', label: 'Resumen', icon: Home },
     { id: 'orders', label: 'Mis Pedidos', icon: Package },
+    { id: 'complaints', label: 'Mis Reclamos', icon: MessageSquare, link: '/my-complaints' },
     { id: 'favorites', label: 'Favoritos', icon: Heart },
     { id: 'settings', label: 'Configuración', icon: Settings }
   ];
@@ -82,31 +84,38 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 p-4 space-y-2">
           {menuItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => setActiveView(item.id)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === item.id
-                ? 'bg-gradient-to-r from-brand-gold to-yellow-500 text-slate-900 shadow-lg shadow-brand-gold/30'
-                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
-                }`}
-            >
-              <item.icon className="w-5 h-5 flex-shrink-0" />
-              {sidebarOpen && <span className="font-bold">{item.label}</span>}
-              {sidebarOpen && activeView === item.id && <ChevronRight className="w-4 h-4 ml-auto" />}
-            </button>
+            item.link ? (
+              <Link
+                key={item.id}
+                to={item.link}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+              >
+                <item.icon className="w-5 h-5 flex-shrink-0" />
+                {sidebarOpen && <span className="font-bold">{item.label}</span>}
+              </Link>
+            ) : (
+              <button
+                key={item.id}
+                onClick={() => setActiveView(item.id)}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === item.id
+                  ? 'bg-gradient-to-r from-brand-gold to-yellow-500 text-slate-900 shadow-lg shadow-brand-gold/30'
+                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  }`}
+              >
+                <item.icon className="w-5 h-5 flex-shrink-0" />
+                {sidebarOpen && <span className="font-bold">{item.label}</span>}
+                {sidebarOpen && activeView === item.id && <ChevronRight className="w-4 h-4 ml-auto" />}
+              </button>
+            )
           ))}
         </nav>
 
         {/* Logout Button */}
         <div className="p-4 border-t border-slate-200 dark:border-slate-800">
           <button
-            onClick={() => {
-              logout();
-              navigate('/');
-            }}
+            onClick={() => setShowLogoutModal(true)}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
           >
             <LogOut className="w-5 h-5 flex-shrink-0" />
@@ -471,6 +480,48 @@ export default function Profile() {
           )}
         </div>
       </main>
+
+      {/* Modal de Confirmación de Cierre de Sesión */}
+      {showLogoutModal && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]"
+            onClick={() => setShowLogoutModal(false)}
+          />
+          <div className="fixed inset-0 flex items-center justify-center z-[101] p-4">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-6 w-full max-w-sm">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <LogOut className="w-8 h-8 text-red-600 dark:text-red-400" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
+                  ¿Cerrar sesión?
+                </h3>
+                <p className="text-slate-600 dark:text-slate-400">
+                  ¿Estás seguro que quieres cerrar tu sesión?
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowLogoutModal(false)}
+                  className="flex-1 px-4 py-3 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={() => {
+                    logout();
+                    navigate('/');
+                  }}
+                  className="flex-1 px-4 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition"
+                >
+                  Sí, cerrar sesión
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

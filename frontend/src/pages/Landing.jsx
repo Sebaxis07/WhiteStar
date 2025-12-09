@@ -56,23 +56,7 @@ export default function Landing() {
                 </Link>
               </div>
 
-              {/* Quick Stats */}
-              <div className="grid grid-cols-3 gap-6 pt-8">
-                {[
-                  { value: '150+', label: 'Perfumes' },
-                  { value: '50+', label: 'Marcas' },
-                  { value: '10K+', label: 'Clientes' }
-                ].map((stat, i) => (
-                  <div key={i} className="text-center lg:text-left">
-                    <p className="text-3xl font-black bg-gradient-to-r from-brand-gold to-yellow-500 bg-clip-text text-transparent">
-                      {stat.value}
-                    </p>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
-                      {stat.label}
-                    </p>
-                  </div>
-                ))}
-              </div>
+
             </div>
 
             {/* Right Visual */}
@@ -192,22 +176,19 @@ export default function Landing() {
                 emoji: '👨',
                 title: 'Masculinos',
                 desc: 'Aromas intensos y sofisticados',
-                gradient: 'from-blue-600 via-blue-500 to-cyan-500',
-                items: '80+ perfumes'
+                gradient: 'from-blue-600 via-blue-500 to-cyan-500'
               },
               {
                 emoji: '👩',
                 title: 'Femeninos',
                 desc: 'Fragancias elegantes y cautivadoras',
-                gradient: 'from-pink-600 via-pink-500 to-rose-500',
-                items: '90+ perfumes'
+                gradient: 'from-pink-600 via-pink-500 to-rose-500'
               },
               {
                 emoji: '✨',
                 title: 'Unisex',
                 desc: 'Aromas versátiles sin límites',
-                gradient: 'from-purple-600 via-purple-500 to-indigo-500',
-                items: '40+ perfumes'
+                gradient: 'from-purple-600 via-purple-500 to-indigo-500'
               }
             ].map((cat, i) => (
               <Link
@@ -230,10 +211,7 @@ export default function Landing() {
                     {cat.desc}
                   </p>
 
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-bold bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm">
-                      {cat.items}
-                    </span>
+                  <div className="flex items-center justify-end">
                     <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
                   </div>
                 </div>
@@ -243,113 +221,9 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Testimonials - Redesigned */}
-      <section className="py-24 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16 space-y-4">
-            <span className="inline-block px-4 py-2 bg-brand-gold/10 border border-brand-gold/30 rounded-full text-brand-gold font-bold text-sm">
-              Testimonios
-            </span>
-            <h2 className="text-5xl md:text-6xl font-black text-slate-900 dark:text-white">
-              Clientes Felices
-            </h2>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                name: 'María García',
-                role: 'Cliente VIP',
-                text: 'Increíble servicio y productos de primera calidad. Mi perfume favorito siempre disponible.',
-                rating: 5,
-                avatar: 'MG'
-              },
-              {
-                name: 'Carlos López',
-                role: 'Comprador Frecuente',
-                text: 'La atención personalizada es excepcional. Me ayudaron a encontrar mi aroma perfecto.',
-                rating: 5,
-                avatar: 'CL'
-              },
-              {
-                name: 'Ana Martínez',
-                role: 'Nueva Cliente',
-                text: 'Entrega rápida y producto exactamente como se describe. Definitivamente volveré.',
-                rating: 5,
-                avatar: 'AM'
-              }
-            ].map((testimonial, i) => (
-              <div
-                key={i}
-                className="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 hover:shadow-2xl transition-all hover:scale-105"
-              >
-                <div className="flex gap-1 mb-6">
-                  {[...Array(testimonial.rating)].map((_, j) => (
-                    <Star key={j} className="w-5 h-5 fill-brand-gold text-brand-gold" />
-                  ))}
-                </div>
 
-                <p className="text-slate-700 dark:text-slate-300 mb-8 text-lg leading-relaxed italic">
-                  "{testimonial.text}"
-                </p>
 
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-brand-gold to-yellow-500 flex items-center justify-center font-black text-slate-900 text-lg">
-                    {testimonial.avatar}
-                  </div>
-                  <div>
-                    <p className="font-black text-slate-900 dark:text-white">
-                      {testimonial.name}
-                    </p>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      {testimonial.role}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Promo Banner - Redesigned */}
-      <section className="py-24 px-4 bg-gradient-to-br from-brand-gold/10 via-yellow-500/10 to-brand-gold/10">
-        <div className="max-w-5xl mx-auto">
-          <div className="relative overflow-hidden bg-gradient-to-r from-brand-gold to-yellow-500 rounded-[3rem] p-12 md:p-16 text-center">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-
-            <div className="relative z-10">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-900/20 rounded-full mb-6 backdrop-blur-sm">
-                <Sparkles className="w-4 h-4 text-white" />
-                <span className="text-white font-bold text-sm">Oferta Especial</span>
-              </div>
-
-              <h2 className="text-4xl md:text-6xl font-black text-slate-900 mb-6">
-                15% de Descuento
-              </h2>
-
-              <p className="text-xl text-slate-800 mb-8 max-w-2xl mx-auto">
-                En tu primera compra. Usa el código al finalizar tu pedido
-              </p>
-
-              <div className="inline-block px-8 py-4 bg-slate-900 text-white rounded-2xl font-black text-2xl mb-8 border-4 border-slate-900/20">
-                BIENVENIDA15
-              </div>
-
-              <div>
-                <Link
-                  to="/register"
-                  className="inline-flex items-center gap-2 px-10 py-5 bg-slate-900 text-white rounded-2xl font-black text-lg hover:bg-slate-800 transition-all hover:scale-105"
-                >
-                  Crear Cuenta Ahora
-                  <ArrowRight className="w-6 h-6" />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Final CTA - Redesigned */}
       <section className="py-32 px-4 relative overflow-hidden">

@@ -24,6 +24,7 @@ import ComplaintManagement from './pages/ComplaintManagement';
 import OrderTracking from './pages/OrderTracking';
 import TaskManagement from './pages/TaskManagement';
 import SellerStockView from './pages/SellerStockView';
+import MyComplaints from './pages/MyComplaints';
 
 function App() {
   return (
@@ -57,6 +58,7 @@ function App() {
                   <Route path="/customer-service/orders" element={<OrderTracking />} />
                   <Route path="/tasks" element={<TaskManagement />} />
                   <Route path="/seller-stock" element={<SellerStockView />} />
+                  <Route path="/my-complaints" element={<MyComplaints />} />
                 </Routes>
               </main>
             </ToastProvider>
