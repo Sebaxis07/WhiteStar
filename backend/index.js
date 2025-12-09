@@ -3,6 +3,7 @@ import app from './src/app.js';
 import sequelize from './src/config/database.js';
 // Importar modelos para que se registren en Sequelize
 import './src/models/index.js';
+import { autoSeedDatabase } from './src/utils/autoSeed.js';
 
 
 dotenv.config();
@@ -27,7 +28,10 @@ const startServer = async () => {
       console.log('✓ Modelos sincronizados');
     }
 
-    // 3. Iniciar servidor
+    // 3. Auto-seed si la base de datos está vacía
+    await autoSeedDatabase();
+
+    // 4. Iniciar servidor
     app.listen(PORT, () => {
       console.log(`✓ Servidor ejecutándose en http://localhost:${PORT}`);
     });
