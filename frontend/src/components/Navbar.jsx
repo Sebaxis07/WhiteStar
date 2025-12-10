@@ -81,9 +81,6 @@ export default function Navbar() {
                 <h1 className="text-2xl font-black bg-gradient-to-r from-brand-gold to-yellow-500 bg-clip-text text-transparent">
                   <span>White</span>Star
                 </h1>
-                <p className="text-xs text-slate-500 dark:text-slate-400 -mt-1">
-                  Fragancias Premium
-                </p>
               </div>
             </Link>
 

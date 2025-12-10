@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles, Heart, Award, Zap, Star, Droplet, ShoppingBag, TrendingUp, Shield, Truck } from 'lucide-react';
+import { useAuth } from '../hooks/useAuth';
 
 export default function Landing() {
+  const { user } = useAuth();
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       {/* Hero Section - Redesigned */}
@@ -48,12 +51,14 @@ export default function Landing() {
                   <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 to-brand-gold opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 </Link>
 
-                <Link
-                  to="/register"
-                  className="px-8 py-4 border-2 border-brand-gold text-brand-gold rounded-2xl font-black text-lg hover:bg-brand-gold/10 transition-all"
-                >
-                  Crear Cuenta
-                </Link>
+                {!user && (
+                  <Link
+                    to="/register"
+                    className="px-8 py-4 border-2 border-brand-gold text-brand-gold rounded-2xl font-black text-lg hover:bg-brand-gold/10 transition-all"
+                  >
+                    Crear Cuenta
+                  </Link>
+                )}
               </div>
 
 
