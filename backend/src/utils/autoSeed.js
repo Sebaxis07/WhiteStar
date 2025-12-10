@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { Role, User, Category, Product, Order, OrderItem } from '../models/index.js';
+import { Role, User, Category, Product, Order, OrderItem, Reservation } from '../models/index.js';
 
 const ROLES = {
     ADMIN: 'Admin',
@@ -194,21 +194,44 @@ export async function autoSeedDatabase() {
                 // Update created_at directly (Sequelize doesn't allow setting it on create)
                 await order.update({ created_at: createdAt }, { silent: true });
 
-                // Add random order items
+                // Add random order items AND create Reservations (dashboard uses Reservations for charts)
                 const numItems = Math.floor(Math.random() * 3) + 1; // 1-3 items per order
                 const shuffledProducts = [...products].sort(() => Math.random() - 0.5);
 
                 for (let i = 0; i < numItems && i < shuffledProducts.length; i++) {
+                    const quantity = Math.floor(Math.random() * 2) + 1; // 1-2 quantity
+                    const price = shuffledProducts[i].price;
+
+                    // Create OrderItem
                     await OrderItem.create({
                         order_id: order.id,
                         product_id: shuffledProducts[i].id,
-                        quantity: Math.floor(Math.random() * 2) + 1, // 1-2 quantity
-                        price: shuffledProducts[i].price
+                        quantity: quantity,
+                        price: price
                     });
+
+                    // Create Reservation (used by dashboard for charts)
+                    const expiryDate = new Date(createdAt);
+                    expiryDate.setDate(expiryDate.getDate() + 7);
+
+                    const reservation = await Reservation.create({
+                        user_id: orderData.user_id,
+                        product_id: shuffledProducts[i].id,
+                        order_id: order.id,
+                        quantity: quantity,
+                        status: 'Completada',
+                        reservation_date: createdAt,
+                        expiry_date: expiryDate,
+                        total_price: price * quantity,
+                        notes: 'Reserva generada por seed automático'
+                    });
+
+                    // Update reservation_date directly
+                    await reservation.update({ reservation_date: createdAt }, { silent: true });
                 }
             }
 
-            console.log(`✅ ${ordersData.length} Órdenes creadas con items`);
+            console.log(`✅ ${ordersData.length} Órdenes creadas con items y reservaciones`);
         } else {
             console.log('⚠️ No se encontraron clientes para crear órdenes');
         }
@@ -311,21 +334,44 @@ async function seedOrders() {
             // Update created_at directly (Sequelize doesn't allow setting it on create)
             await order.update({ created_at: createdAt }, { silent: true });
 
-            // Add random order items
+            // Add random order items AND create Reservations (dashboard uses Reservations for charts)
             const numItems = Math.floor(Math.random() * 3) + 1; // 1-3 items per order
             const shuffledProducts = [...products].sort(() => Math.random() - 0.5);
 
             for (let i = 0; i < numItems && i < shuffledProducts.length; i++) {
+                const quantity = Math.floor(Math.random() * 2) + 1; // 1-2 quantity
+                const price = shuffledProducts[i].price;
+
+                // Create OrderItem
                 await OrderItem.create({
                     order_id: order.id,
                     product_id: shuffledProducts[i].id,
-                    quantity: Math.floor(Math.random() * 2) + 1, // 1-2 quantity
-                    price: shuffledProducts[i].price
+                    quantity: quantity,
+                    price: price
                 });
+
+                // Create Reservation (used by dashboard for charts)
+                const expiryDate = new Date(createdAt);
+                expiryDate.setDate(expiryDate.getDate() + 7);
+
+                const reservation = await Reservation.create({
+                    user_id: orderData.user_id,
+                    product_id: shuffledProducts[i].id,
+                    order_id: order.id,
+                    quantity: quantity,
+                    status: 'Completada',
+                    reservation_date: createdAt,
+                    expiry_date: expiryDate,
+                    total_price: price * quantity,
+                    notes: 'Reserva generada por seed automático'
+                });
+
+                // Update reservation_date directly
+                await reservation.update({ reservation_date: createdAt }, { silent: true });
             }
         }
 
-        console.log(`✅ ${ordersData.length} Órdenes creadas con items`);
+        console.log(`✅ ${ordersData.length} Órdenes creadas con items y reservaciones`);
         console.log('═══════════════════════════════════════════════════════');
         console.log('📊 ¡Seed de órdenes completado!');
         console.log('═══════════════════════════════════════════════════════\n');
