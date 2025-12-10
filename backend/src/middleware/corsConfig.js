@@ -6,6 +6,7 @@ const allowedOrigins = [
   'https://whitestar-six.vercel.app',
   'https://white-starsas.vercel.app',
   'https://white-starrrr.vercel.app',
+  'https://whiteee-starrr.vercel.app',
   'https://whiteee-starrr.vercel.app', // URL de producción actual
   'https://white-starrrr-ced3mh8oh-sebastaanas-projects.vercel.app',
   process.env.FRONTEND_URL
