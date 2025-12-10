@@ -5,19 +5,24 @@ const allowedOrigins = [
   'https://whitesstar.vercel.app',
   'https://whitestar-six.vercel.app',
   'https://white-starsas.vercel.app',
-  'https://white-starrrr.vercel.app', // URL actual de producción
+  'https://white-starrrr.vercel.app',
+  'https://white-starrrr-ced3mh8oh-sebastaanas-projects.vercel.app', // URL de preview actual
   process.env.FRONTEND_URL
 ].filter(Boolean); // Eliminar valores undefined
+
+// Patrón para URLs de preview de Vercel (cada deploy tiene una URL única)
+const vercelPreviewPattern = /^https:\/\/white-starrrr.*\.vercel\.app$/;
 
 export const corsConfig = {
   origin: function (origin, callback) {
     // Permitir peticiones sin origin (como Postman, curl, etc.)
     if (!origin) return callback(null, true);
 
-    // Verificar si el origin está en la lista permitida
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    // Verificar si el origin está en la lista permitida O coincide con el patrón de Vercel
+    if (allowedOrigins.indexOf(origin) !== -1 || vercelPreviewPattern.test(origin)) {
       callback(null, true);
     } else {
+      console.log('❌ CORS bloqueado para origen:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
