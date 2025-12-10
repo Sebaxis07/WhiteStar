@@ -6,12 +6,13 @@ const allowedOrigins = [
   'https://whitestar-six.vercel.app',
   'https://white-starsas.vercel.app',
   'https://white-starrrr.vercel.app',
-  'https://white-starrrr-ced3mh8oh-sebastaanas-projects.vercel.app', // URL de preview actual
+  'https://whiteee-starrr.vercel.app', // URL de producción actual
+  'https://white-starrrr-ced3mh8oh-sebastaanas-projects.vercel.app',
   process.env.FRONTEND_URL
 ].filter(Boolean); // Eliminar valores undefined
 
-// Patrón para URLs de preview de Vercel (cada deploy tiene una URL única)
-const vercelPreviewPattern = /^https:\/\/white-starrrr.*\.vercel\.app$/;
+// Patrón para URLs de Vercel (cualquier variación de whitestar)
+const vercelPreviewPattern = /^https:\/\/white.*star.*\.vercel\.app$/;
 
 export const corsConfig = {
   origin: function (origin, callback) {
