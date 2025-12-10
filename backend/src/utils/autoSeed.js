@@ -107,8 +107,100 @@ export async function autoSeedDatabase() {
             { name: 'Armani Privé Rose', description: 'Colección exclusiva con rosa de Damasco. Lujo absoluto.', price: 189990, stock: 5, low_stock_threshold: 1, category_id: categories[3].id, image_url: 'https://images.unsplash.com/photo-1608528577891-eb055944f2e7?w=500&h=500&fit=crop' }
         ];
 
-        await Product.bulkCreate(productsData);
+        const products = await Product.bulkCreate(productsData);
         console.log('✅ 12 Productos creados');
+
+        // 5. Create Sample Orders with varied dates for chart visualization
+        console.log('📊 Creando órdenes de ejemplo para gráficos...');
+
+        // Get users for orders (clients)
+        const clients = await User.findAll({
+            include: [{ model: Role, where: { name: 'Cliente' } }]
+        });
+
+        if (clients.length > 0) {
+            const { Order, OrderItem } = await import('../models/index.js');
+
+            // Helper to create date in the past
+            const daysAgo = (days) => {
+                const date = new Date();
+                date.setDate(date.getDate() - days);
+                return date;
+            };
+
+            // Generate ticket number
+            const generateTicket = (index) => `WS-${Date.now()}-${String(index).padStart(4, '0')}`;
+
+            // Sample orders spanning last 90 days
+            const ordersData = [
+                // Recent orders (last 7 days)
+                { user_id: clients[0].id, status: 'Entregado', payment_status: 'Completado', total: 89990, tax: 17098, created_at: daysAgo(1), ticket_number: generateTicket(1) },
+                { user_id: clients[1 % clients.length].id, status: 'Enviado', payment_status: 'Completado', total: 159980, tax: 30396, created_at: daysAgo(2), ticket_number: generateTicket(2) },
+                { user_id: clients[0].id, status: 'Confirmado', payment_status: 'Completado', total: 74990, tax: 14248, created_at: daysAgo(3), ticket_number: generateTicket(3) },
+                { user_id: clients[1 % clients.length].id, status: 'Pendiente', payment_status: 'Pendiente', total: 94990, tax: 18048, created_at: daysAgo(5), ticket_number: generateTicket(4) },
+
+                // Last week
+                { user_id: clients[0].id, status: 'Entregado', payment_status: 'Completado', total: 149990, tax: 28498, created_at: daysAgo(8), ticket_number: generateTicket(5) },
+                { user_id: clients[1 % clients.length].id, status: 'Entregado', payment_status: 'Completado', total: 64990, tax: 12348, created_at: daysAgo(10), ticket_number: generateTicket(6) },
+                { user_id: clients[0].id, status: 'Cancelado', payment_status: 'Reembolsado', total: 79990, tax: 15198, created_at: daysAgo(12), ticket_number: generateTicket(7) },
+
+                // 2 weeks ago
+                { user_id: clients[1 % clients.length].id, status: 'Entregado', payment_status: 'Completado', total: 189990, tax: 36098, created_at: daysAgo(14), ticket_number: generateTicket(8) },
+                { user_id: clients[0].id, status: 'Entregado', payment_status: 'Completado', total: 119990, tax: 22798, created_at: daysAgo(16), ticket_number: generateTicket(9) },
+
+                // 3 weeks ago
+                { user_id: clients[1 % clients.length].id, status: 'Entregado', payment_status: 'Completado', total: 99990, tax: 18998, created_at: daysAgo(20), ticket_number: generateTicket(10) },
+                { user_id: clients[0].id, status: 'Entregado', payment_status: 'Completado', total: 84990, tax: 16148, created_at: daysAgo(22), ticket_number: generateTicket(11) },
+
+                // 1 month ago
+                { user_id: clients[1 % clients.length].id, status: 'Entregado', payment_status: 'Completado', total: 174980, tax: 33246, created_at: daysAgo(30), ticket_number: generateTicket(12) },
+                { user_id: clients[0].id, status: 'Entregado', payment_status: 'Completado', total: 59990, tax: 11398, created_at: daysAgo(32), ticket_number: generateTicket(13) },
+                { user_id: clients[1 % clients.length].id, status: 'Entregado', payment_status: 'Completado', total: 109990, tax: 20898, created_at: daysAgo(35), ticket_number: generateTicket(14) },
+
+                // 6 weeks ago
+                { user_id: clients[0].id, status: 'Entregado', payment_status: 'Completado', total: 94990, tax: 18048, created_at: daysAgo(42), ticket_number: generateTicket(15) },
+                { user_id: clients[1 % clients.length].id, status: 'Entregado', payment_status: 'Completado', total: 139980, tax: 26596, created_at: daysAgo(45), ticket_number: generateTicket(16) },
+
+                // 2 months ago
+                { user_id: clients[0].id, status: 'Entregado', payment_status: 'Completado', total: 189990, tax: 36098, created_at: daysAgo(55), ticket_number: generateTicket(17) },
+                { user_id: clients[1 % clients.length].id, status: 'Entregado', payment_status: 'Completado', total: 79990, tax: 15198, created_at: daysAgo(60), ticket_number: generateTicket(18) },
+                { user_id: clients[0].id, status: 'Entregado', payment_status: 'Completado', total: 64990, tax: 12348, created_at: daysAgo(65), ticket_number: generateTicket(19) },
+
+                // 3 months ago
+                { user_id: clients[1 % clients.length].id, status: 'Entregado', payment_status: 'Completado', total: 149990, tax: 28498, created_at: daysAgo(75), ticket_number: generateTicket(20) },
+                { user_id: clients[0].id, status: 'Entregado', payment_status: 'Completado', total: 99990, tax: 18998, created_at: daysAgo(80), ticket_number: generateTicket(21) },
+                { user_id: clients[1 % clients.length].id, status: 'Entregado', payment_status: 'Completado', total: 119990, tax: 22798, created_at: daysAgo(85), ticket_number: generateTicket(22) },
+                { user_id: clients[0].id, status: 'Entregado', payment_status: 'Completado', total: 74990, tax: 14248, created_at: daysAgo(90), ticket_number: generateTicket(23) }
+            ];
+
+            // Create orders one by one to set created_at properly
+            for (const orderData of ordersData) {
+                const createdAt = orderData.created_at;
+                delete orderData.created_at;
+
+                const order = await Order.create(orderData);
+
+                // Update created_at directly (Sequelize doesn't allow setting it on create)
+                await order.update({ created_at: createdAt }, { silent: true });
+
+                // Add random order items
+                const numItems = Math.floor(Math.random() * 3) + 1; // 1-3 items per order
+                const shuffledProducts = [...products].sort(() => Math.random() - 0.5);
+
+                for (let i = 0; i < numItems && i < shuffledProducts.length; i++) {
+                    await OrderItem.create({
+                        order_id: order.id,
+                        product_id: shuffledProducts[i].id,
+                        quantity: Math.floor(Math.random() * 2) + 1, // 1-2 quantity
+                        price: shuffledProducts[i].price
+                    });
+                }
+            }
+
+            console.log(`✅ ${ordersData.length} Órdenes creadas con items`);
+        } else {
+            console.log('⚠️ No se encontraron clientes para crear órdenes');
+        }
 
         console.log('\n═══════════════════════════════════════════════════════');
         console.log('🎉 ¡Auto-seed completado exitosamente!');

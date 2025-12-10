@@ -1,5 +1,6 @@
 import { X, ChevronDown } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import api from '../services/api';
 
 export default function FilterSidebar({
   filters,
@@ -14,6 +15,24 @@ export default function FilterSidebar({
     category: true,
     rating: true
   });
+  const [categories, setCategories] = useState([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+
+  // Fetch categories from the API
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await api.get('/categories');
+        setCategories(response.data.categories || []);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        setCategories([]);
+      } finally {
+        setLoadingCategories(false);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const toggleSection = (section) => {
     setExpandedSections(prev => ({
@@ -21,14 +40,6 @@ export default function FilterSidebar({
       [section]: !prev[section]
     }));
   };
-
-  const categories = [
-    'Perfumes Masculinos',
-    'Perfumes Femeninos',
-    'Unisex',
-    'Eau de Toilette',
-    'Eau de Parfum'
-  ];
 
   const priceRanges = [
     { label: 'Menos de $50', min: 0, max: 50 },
@@ -46,11 +57,10 @@ export default function FilterSidebar({
       onClick={isMobile ? onClose : undefined}
     >
       <div
-        className={`bg-white dark:bg-slate-800 p-6 rounded-lg border border-slate-200 dark:border-slate-700 ${
-          isMobile
-            ? 'fixed inset-y-0 left-0 w-72 overflow-y-auto animate-slide-in-right'
-            : 'sticky top-24'
-        }`}
+        className={`bg-white dark:bg-slate-800 p-6 rounded-lg border border-slate-200 dark:border-slate-700 ${isMobile
+          ? 'fixed inset-y-0 left-0 w-72 overflow-y-auto animate-slide-in-right'
+          : 'sticky top-24'
+          }`}
         onClick={e => isMobile && e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">
@@ -148,6 +158,7 @@ export default function FilterSidebar({
                     type="radio"
                     name="category"
                     value=""
+                    checked={!filters.category}
                     onChange={() => onFilterChange('category', '')}
                     className="w-4 h-4 border-slate-300 dark:border-slate-600 text-brand-gold"
                   />
@@ -155,23 +166,28 @@ export default function FilterSidebar({
                     Todas las categorías
                   </span>
                 </label>
-                {categories.map(cat => (
-                  <label
-                    key={cat}
-                    className="flex items-center gap-3 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 p-2 rounded transition"
-                  >
-                    <input
-                      type="radio"
-                      name="category"
-                      value={cat}
-                      onChange={() => onFilterChange('category', cat)}
-                      className="w-4 h-4 border-slate-300 dark:border-slate-600 text-brand-gold"
-                    />
-                    <span className="text-sm text-slate-600 dark:text-slate-400">
-                      {cat}
-                    </span>
-                  </label>
-                ))}
+                {loadingCategories ? (
+                  <div className="text-sm text-slate-400 p-2">Cargando categorías...</div>
+                ) : (
+                  categories.map(cat => (
+                    <label
+                      key={cat.id}
+                      className="flex items-center gap-3 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 p-2 rounded transition"
+                    >
+                      <input
+                        type="radio"
+                        name="category"
+                        value={cat.name}
+                        checked={filters.category === cat.name}
+                        onChange={() => onFilterChange('category', cat.name)}
+                        className="w-4 h-4 border-slate-300 dark:border-slate-600 text-brand-gold"
+                      />
+                      <span className="text-sm text-slate-600 dark:text-slate-400">
+                        {cat.name}
+                      </span>
+                    </label>
+                  ))
+                )}
               </div>
             )}
           </div>
