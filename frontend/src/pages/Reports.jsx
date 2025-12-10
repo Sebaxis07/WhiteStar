@@ -301,9 +301,10 @@ export default function Reports() {
                                                         fill="#8884d8"
                                                         paddingAngle={5}
                                                         dataKey="total_revenue"
-                                                        nameKey="Product.Category.name"
+                                                        nameKey="category_name"
+                                                        label={({ category_name, percent }) => `${category_name} (${(percent * 100).toFixed(0)}%)`}
                                                     >
-                                                        {salesData.sales_by_category.map((entry, index) => (
+                                                        {(salesData.sales_by_category || []).map((entry, index) => (
                                                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                                         ))}
                                                     </Pie>

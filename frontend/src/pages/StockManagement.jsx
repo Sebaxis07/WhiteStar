@@ -130,6 +130,68 @@ export default function StockManagement() {
         return new Date(dateString).toLocaleString('es-CL');
     };
 
+    // Export inventory to CSV
+    const exportInventoryCSV = () => {
+        const filteredProducts = products.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+        if (filteredProducts.length === 0) {
+            addToast('No hay productos para exportar', 'error');
+            return;
+        }
+
+        const headers = ['Producto', 'Stock Total', 'Stock Reservado', 'Stock Disponible', 'Estado'];
+        const rows = filteredProducts.map(p => [
+            p.name,
+            p.stock,
+            p.reserved_stock || 0,
+            p.available_stock || p.stock,
+            p.is_low_stock ? 'Stock Bajo' : 'Normal'
+        ]);
+
+        const csvContent = [
+            headers.join(','),
+            ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+        ].join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `inventario_${new Date().toISOString().split('T')[0]}.csv`;
+        link.click();
+        addToast('Inventario exportado exitosamente', 'success');
+    };
+
+    // Export movements to CSV
+    const exportMovementsCSV = () => {
+        if (movements.length === 0) {
+            addToast('No hay movimientos para exportar', 'error');
+            return;
+        }
+
+        const headers = ['Fecha', 'Producto', 'Tipo', 'Cantidad', 'Stock Previo', 'Nuevo Stock', 'Usuario', 'Motivo'];
+        const rows = movements.map(m => [
+            formatDate(m.created_at),
+            m.Product?.name || 'N/A',
+            m.movement_type?.toUpperCase() || 'N/A',
+            m.quantity,
+            m.previous_stock,
+            m.new_stock,
+            `${m.performer?.first_name || ''} ${m.performer?.last_name || ''}`.trim() || 'N/A',
+            m.reason || ''
+        ]);
+
+        const csvContent = [
+            headers.join(','),
+            ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+        ].join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `movimientos_stock_${new Date().toISOString().split('T')[0]}.csv`;
+        link.click();
+        addToast('Reporte de movimientos exportado exitosamente', 'success');
+    };
+
     return (
         <div className="min-h-screen bg-white dark:bg-slate-900 py-8 relative">
             <div className="max-w-7xl mx-auto px-4">
@@ -254,9 +316,12 @@ export default function StockManagement() {
                                 <p className="text-slate-600 dark:text-slate-400 whitespace-nowrap">
                                     {products.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase())).length} productos
                                 </p>
-                                <button className="flex items-center gap-2 px-4 py-2 bg-brand-gold text-slate-900 rounded-lg hover:bg-yellow-500 transition font-medium whitespace-nowrap">
+                                <button
+                                    onClick={exportInventoryCSV}
+                                    className="flex items-center gap-2 px-4 py-2 bg-brand-gold text-slate-900 rounded-lg hover:bg-yellow-500 transition font-medium whitespace-nowrap"
+                                >
                                     <Download size={18} />
-                                    Exportar
+                                    Exportar CSV
                                 </button>
                             </div>
                         </div>
@@ -386,9 +451,12 @@ export default function StockManagement() {
                                     </select>
                                 </div>
                                 <div className="flex-1"></div>
-                                <button className="flex items-center gap-2 px-4 py-2 bg-brand-gold text-slate-900 rounded-lg hover:bg-yellow-500 transition font-medium">
+                                <button
+                                    onClick={exportMovementsCSV}
+                                    className="flex items-center gap-2 px-4 py-2 bg-brand-gold text-slate-900 rounded-lg hover:bg-yellow-500 transition font-medium"
+                                >
                                     <Download size={18} />
-                                    Exportar Reporte
+                                    Exportar CSV
                                 </button>
                             </div>
                         </div>

@@ -89,26 +89,40 @@ export const getSalesReport = async (req, res) => {
         // Sales by category
         let salesByCategory = [];
         try {
-            salesByCategory = await Reservation.findAll({
+            // Get reservations with product and category data
+            const reservationsWithCategory = await Reservation.findAll({
                 where: whereClause,
-                attributes: [
-                    [fn('SUM', col('quantity')), 'total_quantity'],
-                    [fn('SUM', col('total_price')), 'total_revenue']
-                ],
                 include: [{
                     model: Product,
-                    attributes: [],
+                    attributes: ['id', 'name'],
                     include: [{
                         model: Category,
-                        attributes: ['name']
+                        attributes: ['id', 'name']
                     }]
-                }],
-                group: [col('Product->Category.id'), col('Product->Category.name')],
-                raw: true
+                }]
             });
+
+            // Group by category manually for proper formatting
+            const categoryMap = {};
+            reservationsWithCategory.forEach(res => {
+                const categoryName = res.Product?.Category?.name || 'Sin Categoría';
+                if (!categoryMap[categoryName]) {
+                    categoryMap[categoryName] = { total_quantity: 0, total_revenue: 0 };
+                }
+                categoryMap[categoryName].total_quantity += res.quantity || 0;
+                categoryMap[categoryName].total_revenue += parseFloat(res.total_price) || 0;
+            });
+
+            // Convert to array format for frontend
+            salesByCategory = Object.entries(categoryMap).map(([name, data]) => ({
+                category_name: name,
+                total_quantity: data.total_quantity,
+                total_revenue: data.total_revenue
+            }));
         } catch (err) {
             console.error('Error getting sales by category:', err);
         }
+
 
         // Payment status breakdown (Reservations don't strictly have payment_status separate from status, using status as proxy or skipping)
         // For now, we'll map status to payment_status structure to keep frontend happy if it uses it
